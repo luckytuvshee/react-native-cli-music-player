@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {addSongToQueue} from '../utils';
 
 export const changeQueue = (path, playlistName) => async dispatch => {
-  const songs = await RNFS.readFile(path, 'ascii');
+  const songs = await RNFS.readFile(path);
 
   try {
     const queueObject = {

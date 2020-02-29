@@ -9,7 +9,6 @@ import {
 import TrackPlayer from 'react-native-track-player';
 import {connect} from 'react-redux';
 import {addQueue, playQueue} from '../actions/player';
-import {retrieveQueue} from '../actions/queue';
 import Card from '../shared/card';
 import {globalStyles} from '../styles/global';
 
@@ -18,15 +17,11 @@ const Queue = ({
   queue: {currentQueue, playlistName, loading},
   addQueue,
   playQueue,
-  retrieveQueue,
 }) => {
   const {comeFrom} = route.params || '';
 
   useEffect(() => {
-    if (!playlistName) {
-      retrieveQueue();
-    }
-    if (comeFrom === 'playlist') addQueue(currentQueue);
+    if (comeFrom === 'playlist') addQueue(currentQueue, true);
   }, [playlistName]); // only re-render if playlistName changes
 
   const pressHandler = (song, index) => {
@@ -81,9 +76,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {addQueue, playQueue, retrieveQueue})(
-  Queue,
-);
+export default connect(mapStateToProps, {addQueue, playQueue})(Queue);
 
 const styles = StyleSheet.create({
   container: {

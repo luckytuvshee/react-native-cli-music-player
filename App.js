@@ -13,6 +13,8 @@ import Playlists from './src/screens/Playlists';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {requestReadExternalStoragePermission} from './src/utils';
 
+import TrackPlayer from 'react-native-track-player';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +53,9 @@ const App = () => {
   useEffect(() => {
     requestReadExternalStoragePermission();
   }, []);
+
+  //AppRegistry.registerComponent(...);
+  TrackPlayer.registerPlaybackService(() => require('./src/service.js'));
 
   return (
     <Provider store={store}>

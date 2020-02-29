@@ -1,7 +1,8 @@
 import TrackPlayer from 'react-native-track-player';
 import {PermissionsAndroid} from 'react-native';
+import store from './store';
 
-export const addSongToQueue = async (songs, RNFS) => {
+export const addSongToQueue = async (songs, RNFS, playSong) => {
   console.log('adding to the queue');
   try {
     songs = songs.map((song, index) => {
@@ -12,24 +13,19 @@ export const addSongToQueue = async (songs, RNFS) => {
       const title = songName.slice(-1);
 
       return {
-        title,
+        title: `${title}`,
         url: `${RNFS.ExternalStorageDirectoryPath}${song}`,
-        artist,
+        artist: `${artist}`,
         id: index + '',
       };
     });
 
+    await TrackPlayer.setupPlayer({maxCacheSize: 1024 * 5});
+
     //if (JSON.stringify(q) === JSON.stringify(songs)) return;
+    await TrackPlayer.add(songs);
 
-    TrackPlayer.setupPlayer({maxCacheSize: 1024 * 5}).then(async () => {
-      TrackPlayer.updateOptions({
-        //
-      });
-      // Adds one or more track to the queue
-      await TrackPlayer.add(songs);
-    });
-
-    TrackPlayer.play();
+    if (playSong) TrackPlayer.play();
   } catch (err) {
     console.error(err.message);
   }
@@ -83,4 +79,22 @@ export const requestReadExternalStoragePermission = async () => {
   } catch (err) {
     console.warn(err);
   }
+};
+
+export const queueEndHandler = () => {
+  console.log('queue ended');
+};
+
+export const trackChangeHandler = async () => {
+  if (store.getState().player.repeat === 'SHUFFLE') {
+    const currentSongId = await TrackPlayer.getCurrentTrack();
+    const ids = store
+      .getState()
+      .queue.currentQueue.map((queue, index) => index)
+      .filter(id => id !== currentSongId);
+
+    TrackPlayer.skip(ids[Math.floor(Math.random() * ids.length)] + '');
+  }
+  console.log('track changed');
+  console.log();
 };

@@ -1,6 +1,5 @@
 import React from 'react';
-import {View, PermissionsAndroid, StyleSheet} from 'react-native';
-import TrackPlayer from 'react-native-track-player';
+import {View, StyleSheet, Image} from 'react-native';
 import {globalStyles} from '../styles/global';
 
 import RepeatOptions from '../components/RepeatOptions';
@@ -11,6 +10,12 @@ const NowPlaying = () => {
     <View style={globalStyles.container}>
       <View style={styles.nowPlaying}>
         <RepeatOptions styles={styles} />
+        <View style={styles.imageContainer}>
+          <Image
+            source={require('../../assets/images/tux.png')}
+            style={styles.image}
+          />
+        </View>
         <PlaybackButtons styles={styles} />
       </View>
     </View>
@@ -26,12 +31,22 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
 
-  options: {
+  imageContainer: {
     flex: 1,
-    width: '100%',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    borderWidth: 1,
+    justifyContent: 'center',
+  },
+
+  image: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+  },
+
+  options: {
+    marginTop: 'auto',
+    alignItems: 'center',
+    // borderWidth: 1,
   },
 
   button: {
@@ -49,8 +64,16 @@ const styles = StyleSheet.create({
   },
 
   buttonBorder: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#81A1C1',
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 12,
   },
 
   optionContainer: {

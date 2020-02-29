@@ -5,7 +5,6 @@ export const getPlaylists = () => async dispatch => {
   try {
     const res = await RNFS.readDir(
       `${RNFS.ExternalStorageDirectoryPath}/cmus/playlists`,
-      'ascii',
     );
 
     dispatch({
