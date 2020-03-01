@@ -2,6 +2,12 @@ import React from 'react';
 import {Text, View, TouchableOpacity} from 'react-native';
 import {next, prev, seekBackward, seekForward, togglePlay} from '../utils';
 
+const ButtonText = ({text, styles}) => {
+  return (
+    <Text style={[styles.buttonText, styles.playbackButtonText]}>{text}</Text>
+  );
+};
+
 const PlaybackButtons = ({styles}) => {
   return (
     <View style={styles.options}>
@@ -9,30 +15,31 @@ const PlaybackButtons = ({styles}) => {
         <TouchableOpacity
           style={[styles.button, styles.buttonBorder]}
           onPress={() => prev()}>
-          <Text style={styles.buttonText}>prev</Text>
+          <ButtonText text="prev" styles={styles} />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.buttonBorder]}
           onPress={() => togglePlay()}>
-          <Text style={styles.buttonText}>c</Text>
+          <ButtonText text="c" styles={styles} />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.buttonBorder]}
           onPress={() => next()}>
-          <Text style={styles.buttonText}>next</Text>
+          <ButtonText text="next" styles={styles} />
         </TouchableOpacity>
       </View>
 
+      {/* Seek */}
       <View style={styles.optionContainer}>
         <TouchableOpacity
           style={[styles.button, styles.buttonBorder]}
           onPress={() => seekBackward(-5)}>
-          <Text style={styles.buttonText}>h</Text>
+          <ButtonText text="h" styles={styles} />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.buttonBorder]}
           onPress={() => seekForward(5)}>
-          <Text style={styles.buttonText}>l</Text>
+          <ButtonText text="l" styles={styles} />
         </TouchableOpacity>
       </View>
     </View>

@@ -16,4 +16,9 @@ export const globalStyles = StyleSheet.create({
     fontSize: 18,
     color: '#333',
   },
+
+  itemSelected: {
+    fontFamily: 'iosevka-bold',
+    color: '#81A1C1',
+  },
 });

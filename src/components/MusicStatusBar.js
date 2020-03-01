@@ -4,6 +4,7 @@ import TrackPlayer from 'react-native-track-player';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {retrieveQueue} from '../actions/queue';
+import {randomIdGenerator} from '../utils';
 
 const MusicStatusBar = ({repeat, playlistName, retrieveQueue}) => {
   const [currentSong, setCurrentSong] = useState({});
@@ -16,7 +17,7 @@ const MusicStatusBar = ({repeat, playlistName, retrieveQueue}) => {
     if (!playlistName) {
       retrieveQueue();
     }
-  }, []);
+  }, [repeat]);
 
   const init = async () => {
     await TrackPlayer.updateOptions({
@@ -47,7 +48,14 @@ const MusicStatusBar = ({repeat, playlistName, retrieveQueue}) => {
       setState(state);
 
       if (pos && dur && dur - pos < 0.8) {
-        if (repeat === 'ONCE') await TrackPlayer.seekTo(0);
+        if (repeat == 'ONCE') {
+          console.log('once');
+          await TrackPlayer.seekTo(0);
+        } else if (repeat == 'SHUFFLE') {
+          const currentQueue = await TrackPlayer.getQueue();
+          const randomId = randomIdGenerator(currentQueue, id);
+          await TrackPlayer.skip(randomId + '');
+        }
       }
     }, 500);
   };

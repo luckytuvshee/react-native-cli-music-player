@@ -13,6 +13,7 @@ const Playlists = ({
   playlists: {playlists, loading},
   getPlaylists,
   changeQueue,
+  playlistName,
 }) => {
   const pressHandler = (path, playlistName) => {
     Alert.alert(
@@ -46,7 +47,13 @@ const Playlists = ({
             key={index}
             onPress={() => pressHandler(playlist.path, playlist.name)}>
             <Card>
-              <Text style={globalStyles.text}>{playlist.name}</Text>
+              <Text
+                style={[
+                  globalStyles.text,
+                  playlistName === playlist.name && globalStyles.itemSelected,
+                ]}>
+                {playlist.name}
+              </Text>
             </Card>
           </TouchableOpacity>
         ))}
@@ -57,6 +64,7 @@ const Playlists = ({
 const mapStateToProps = state => {
   return {
     playlists: state.playlists,
+    playlistName: state.queue.playlistName,
   };
 };
 

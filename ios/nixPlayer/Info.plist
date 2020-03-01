@@ -74,6 +74,8 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>iosevka-bold.ttf</string>
+		<string>iosevka-heavy.ttf</string>
 	</array>
 </dict>
 </plist>

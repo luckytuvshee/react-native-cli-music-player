@@ -1,10 +1,11 @@
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, {getCurrentTrack} from 'react-native-track-player';
 import {PermissionsAndroid} from 'react-native';
 import store from './store';
+import {SET_CURRENT_SONG_ID} from './actions/types';
 
 export const addSongToQueue = async (songs, RNFS, playSong) => {
-  console.log('adding to the queue');
   try {
+    TrackPlayer.reset();
     songs = songs.map((song, index) => {
       const songWithName = song.split('/').pop();
       //const songName = songWithName.split(/\.mp3/)[0];
@@ -21,8 +22,6 @@ export const addSongToQueue = async (songs, RNFS, playSong) => {
     });
 
     await TrackPlayer.setupPlayer({maxCacheSize: 1024 * 5});
-
-    //if (JSON.stringify(q) === JSON.stringify(songs)) return;
     await TrackPlayer.add(songs);
 
     if (playSong) TrackPlayer.play();
@@ -33,7 +32,13 @@ export const addSongToQueue = async (songs, RNFS, playSong) => {
 
 export const seekForward = async seconds => {
   const position = await TrackPlayer.getPosition();
-  TrackPlayer.seekTo(position + seconds);
+  const duration = await TrackPlayer.getDuration();
+  console.log(duration - position);
+  if (Math.ceil(duration - position) <= 5) {
+    TrackPlayer.seekTo(duration);
+  } else {
+    TrackPlayer.seekTo(position + seconds);
+  }
 };
 
 export const seekBackward = async seconds => {
@@ -44,12 +49,41 @@ export const seekBackward = async seconds => {
 
 export const prev = async () => {
   const position = await TrackPlayer.getPosition();
-  if (position < 5) await TrackPlayer.skipToPrevious();
-  else TrackPlayer.seekTo(0);
+  if (position < 5) {
+    const currentId = await TrackPlayer.getCurrentTrack();
+    if (currentId === '0') {
+      const currentQueue = await TrackPlayer.getQueue();
+      await TrackPlayer.skip(currentQueue.length - 1 + '');
+    } else {
+      await TrackPlayer.skipToPrevious();
+    }
+  } else {
+    const status = await TrackPlayer.getState();
+    if (status !== 2) TrackPlayer.seekTo(0); // 2 means ready to play
+  }
+
+  TrackPlayer.play();
 };
 
 export const next = async () => {
-  await TrackPlayer.skipToNext();
+  const repeat = store.getState().player.repeat;
+  const currentQueue = await TrackPlayer.getQueue();
+  const currentId = await TrackPlayer.getCurrentTrack();
+
+  if (repeat === 'SHUFFLE') {
+    const randomId = randomIdGenerator(currentQueue, currentId);
+    if (randomId !== undefined) {
+      await TrackPlayer.skip(randomId + '');
+    }
+  } else {
+    if (currentQueue.length - 1 == currentId) {
+      await TrackPlayer.skip('0');
+    } else {
+      await TrackPlayer.skipToNext();
+    }
+  }
+
+  TrackPlayer.play();
 };
 
 export const togglePlay = async () => {
@@ -81,20 +115,23 @@ export const requestReadExternalStoragePermission = async () => {
   }
 };
 
-export const queueEndHandler = () => {
-  console.log('queue ended');
+export const randomIdGenerator = (currentQueue, currentId) => {
+  const filteredQueue = currentQueue.filter(queue => queue.id !== currentId);
+  const randomNumber = Math.floor(Math.random() * (filteredQueue.length - 1));
+  const randomId = filteredQueue[randomNumber].id;
+  return randomId;
+};
+
+export const queueEndHandler = async () => {
+  const repeat = store.getState().player.repeat;
+  if (repeat === 'ALL') {
+    await TrackPlayer.skip('0');
+  }
 };
 
 export const trackChangeHandler = async () => {
-  if (store.getState().player.repeat === 'SHUFFLE') {
-    const currentSongId = await TrackPlayer.getCurrentTrack();
-    const ids = store
-      .getState()
-      .queue.currentQueue.map((queue, index) => index)
-      .filter(id => id !== currentSongId);
-
-    TrackPlayer.skip(ids[Math.floor(Math.random() * ids.length)] + '');
-  }
   console.log('track changed');
-  console.log();
+  const id = await TrackPlayer.getCurrentTrack();
+  console.log('id: ' + id);
+  store.dispatch({type: SET_CURRENT_SONG_ID, payload: parseInt(id)});
 };

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, {remove} from 'react-native-track-player';
 import {connect} from 'react-redux';
 import {addQueue, playQueue} from '../actions/player';
 import Card from '../shared/card';
@@ -15,17 +15,20 @@ import {globalStyles} from '../styles/global';
 const Queue = ({
   route,
   queue: {currentQueue, playlistName, loading},
+  currentSongId,
   addQueue,
   playQueue,
 }) => {
   const {comeFrom} = route.params || '';
 
   useEffect(() => {
-    if (comeFrom === 'playlist') addQueue(currentQueue, true);
+    if (comeFrom === 'playlist') {
+      addQueue(currentQueue, true);
+    }
   }, [playlistName]); // only re-render if playlistName changes
 
-  const pressHandler = (song, index) => {
-    playQueue(song, index);
+  const pressHandler = index => {
+    playQueue(index);
   };
 
   const getCurrentSongId = async index => {
@@ -56,11 +59,13 @@ const Queue = ({
       )}
       {currentQueue &&
         currentQueue.map((queue, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => pressHandler(queue, index)}>
+          <TouchableOpacity key={index} onPress={() => pressHandler(index)}>
             <Card>
-              <Text style={[globalStyles.songTitle]}>
+              <Text
+                style={[
+                  globalStyles.songTitle,
+                  currentSongId === index && globalStyles.itemSelected,
+                ]}>
                 {songNameExtractor(queue)}
               </Text>
             </Card>
@@ -73,6 +78,7 @@ const Queue = ({
 const mapStateToProps = state => {
   return {
     queue: state.queue,
+    currentSongId: state.player.currentSongId,
   };
 };
 

@@ -35,6 +35,8 @@
 		AEDE4E4CFF0943B1AAF44AF1 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F77F0F1F04844E21AD1128E4 /* Octicons.ttf */; };
 		C34744617BB74C81A524A7E1 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A65699716EA64AD79D34D211 /* SimpleLineIcons.ttf */; };
 		E9A09478B0264B5DABE00029 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A712D04DC0E64F6495ACAEEC /* Zocial.ttf */; };
+		484071C6C95541ABBAB46BD8 /* iosevka-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D0D0034162FC424493293759 /* iosevka-bold.ttf */; };
+		E2412CFB397448AFB3E67D91 /* iosevka-heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9BFB29872C304318A127943A /* iosevka-heavy.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +91,8 @@
 		F77F0F1F04844E21AD1128E4 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		A65699716EA64AD79D34D211 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		A712D04DC0E64F6495ACAEEC /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D0D0034162FC424493293759 /* iosevka-bold.ttf */ = {isa = PBXFileReference; name = "iosevka-bold.ttf"; path = "../assets/fonts/iosevka-bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9BFB29872C304318A127943A /* iosevka-heavy.ttf */ = {isa = PBXFileReference; name = "iosevka-heavy.ttf"; path = "../assets/fonts/iosevka-heavy.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +222,8 @@
 				F77F0F1F04844E21AD1128E4 /* Octicons.ttf */,
 				A65699716EA64AD79D34D211 /* SimpleLineIcons.ttf */,
 				A712D04DC0E64F6495ACAEEC /* Zocial.ttf */,
+				D0D0034162FC424493293759 /* iosevka-bold.ttf */,
+				9BFB29872C304318A127943A /* iosevka-heavy.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -378,6 +384,8 @@
 				AEDE4E4CFF0943B1AAF44AF1 /* Octicons.ttf in Resources */,
 				C34744617BB74C81A524A7E1 /* SimpleLineIcons.ttf in Resources */,
 				E9A09478B0264B5DABE00029 /* Zocial.ttf in Resources */,
+				484071C6C95541ABBAB46BD8 /* iosevka-bold.ttf in Resources */,
+				E2412CFB397448AFB3E67D91 /* iosevka-heavy.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -59,8 +59,12 @@ const styles = StyleSheet.create({
 
   buttonText: {
     textAlign: 'center',
-    fontFamily: 'iosevka-regular',
     fontSize: 18,
+  },
+
+  playbackButtonText: {
+    fontFamily: 'iosevka-bold',
+    color: '#81A1C1',
   },
 
   buttonBorder: {

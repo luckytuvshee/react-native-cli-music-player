@@ -1,6 +1,5 @@
 import {CHANGE_QUEUE} from './types';
 import * as RNFS from 'react-native-fs';
-import TrackPlayer from 'react-native-track-player';
 import AsyncStorage from '@react-native-community/async-storage';
 import {addSongToQueue} from '../utils';
 

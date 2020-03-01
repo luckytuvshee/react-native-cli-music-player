@@ -2,12 +2,13 @@ import TrackPlayer from 'react-native-track-player';
 import * as RNFS from 'react-native-fs';
 import {addSongToQueue} from '../utils';
 
-export const playQueue = (song, index) => async dispatch => {
-  TrackPlayer.skip(index.toString());
+export const playQueue = index => async dispatch => {
+  TrackPlayer.skip(index + '');
   TrackPlayer.play();
 };
 
 export const addQueue = (songs, playSong) => async dispatch => {
+  await TrackPlayer.remove(songs);
   addSongToQueue(songs, RNFS, playSong); // if playSong true, then play after add to the queue
 };
 

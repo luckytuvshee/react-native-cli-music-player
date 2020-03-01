@@ -6,7 +6,10 @@ import {changeRepeat} from '../actions/player';
 
 const RepeatOptions = ({styles, repeat, changeRepeat}) => {
   const pressHandler = repeatString => {
-    if (repeat !== repeatString) changeRepeat(repeatString);
+    if (repeat !== repeatString) {
+      console.log('Repeat changed: ' + repeat + ' --> ' + repeatString);
+      changeRepeat(repeatString);
+    }
   };
 
   return (
