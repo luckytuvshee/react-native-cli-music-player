@@ -11,6 +11,7 @@ const queue = (state = initialState, action) => {
 
   switch (type) {
     case CHANGE_QUEUE:
+      console.log('change queue dispatch');
       return {
         ...state,
         currentQueue: payload.queue,

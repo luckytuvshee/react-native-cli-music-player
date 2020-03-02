@@ -10,13 +10,14 @@ const player = (state = initialState, action) => {
 
   switch (type) {
     case SET_CURRENT_SONG_ID:
-      console.log('dispatched');
+      console.log('set current song id dispatched');
       return {
         repeat: state.repeat,
         currentSongId: payload,
       };
 
     case CHANGE_REPEAT:
+      console.log('change repeat dispatched');
       return {
         repeat: payload,
       };

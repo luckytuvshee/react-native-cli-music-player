@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import {StatusBar} from 'react-native';
 import {Provider} from 'react-redux';
 import store from './src/store';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -12,6 +13,8 @@ import Queue from './src/screens/Queue';
 import Playlists from './src/screens/Playlists';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {requestReadExternalStoragePermission} from './src/utils';
+
+import SplashScreen from 'react-native-splash-screen';
 
 import TrackPlayer from 'react-native-track-player';
 
@@ -51,6 +54,7 @@ const Home = () => {
 
 const App = () => {
   useEffect(() => {
+    SplashScreen.hide();
     requestReadExternalStoragePermission();
   }, []);
 
@@ -59,6 +63,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
+      <StatusBar backgroundColor="#2E3440" barStyle="light-content" />
       <NavigationContainer>
         {/* <Counter /> */}
         <Stack.Navigator>

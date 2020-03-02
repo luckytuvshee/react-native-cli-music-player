@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import TrackPlayer, {remove} from 'react-native-track-player';
 import {connect} from 'react-redux';
 import {addQueue, playQueue} from '../actions/player';
 import Card from '../shared/card';
@@ -23,17 +22,14 @@ const Queue = ({
 
   useEffect(() => {
     if (comeFrom === 'playlist') {
+      console.log('changing queue to this queue');
+      console.log(currentQueue);
       addQueue(currentQueue, true);
     }
   }, [playlistName]); // only re-render if playlistName changes
 
   const pressHandler = index => {
     playQueue(index);
-  };
-
-  const getCurrentSongId = async index => {
-    const id = await TrackPlayer.getCurrentTrack();
-    return parseInt(id);
   };
 
   const songNameExtractor = path => {

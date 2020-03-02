@@ -4,9 +4,13 @@ import TrackPlayer from 'react-native-track-player';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {retrieveQueue} from '../actions/queue';
-import {randomIdGenerator} from '../utils';
+import {randomIdGenerator, togglePlay} from '../utils';
 
-const MusicStatusBar = ({repeat, playlistName, retrieveQueue}) => {
+const MusicStatusBar = ({
+  repeat,
+  queue: {playlistName, currentQueue},
+  retrieveQueue,
+}) => {
   const [currentSong, setCurrentSong] = useState({});
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -17,44 +21,50 @@ const MusicStatusBar = ({repeat, playlistName, retrieveQueue}) => {
     if (!playlistName) {
       retrieveQueue();
     }
-  }, [repeat]);
+  }, [playlistName]);
 
-  const init = async () => {
+  const setTrackPlayerOptions = async () => {
     await TrackPlayer.updateOptions({
       capabilities: [
         TrackPlayer.CAPABILITY_PLAY,
         TrackPlayer.CAPABILITY_PAUSE,
+        TrackPlayer.CAPABILITY_STOP,
         TrackPlayer.CAPABILITY_SEEK_TO,
         TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
         TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
-        TrackPlayer.CAPABILITY_JUMP_FORWARD,
-        TrackPlayer.CAPABILITY_JUMP_BACKWARD,
       ],
     });
+  };
 
+  const init = async () => {
+    setTrackPlayerOptions();
     setInterval(async () => {
-      const [pos, dur, id, state] = await Promise.all([
-        TrackPlayer.getPosition(),
-        TrackPlayer.getDuration(),
-        TrackPlayer.getCurrentTrack(),
-        TrackPlayer.getState(),
-      ]);
-      const songName = await TrackPlayer.getTrack(id);
-      if (songName !== null) {
-        setCurrentSong(songName);
-      }
-      setPosition(pos);
-      setDuration(dur);
-      setState(state);
+      if (playlistName) {
+        const [pos, dur, id, state] = await Promise.all([
+          TrackPlayer.getPosition(),
+          TrackPlayer.getDuration(),
+          TrackPlayer.getCurrentTrack(),
+          TrackPlayer.getState(),
+        ]);
 
-      if (pos && dur && dur - pos < 0.8) {
-        if (repeat == 'ONCE') {
-          console.log('once');
-          await TrackPlayer.seekTo(0);
-        } else if (repeat == 'SHUFFLE') {
-          const currentQueue = await TrackPlayer.getQueue();
-          const randomId = randomIdGenerator(currentQueue, id);
-          await TrackPlayer.skip(randomId + '');
+        const songName = await TrackPlayer.getTrack(id);
+        if (songName !== null) {
+          setCurrentSong(songName);
+
+          setPosition(pos);
+          setDuration(dur);
+          setState(state);
+
+          if (pos && dur && dur - pos <= 0.8) {
+            if (repeat === 'ONCE') {
+              console.log('once');
+              await TrackPlayer.seekTo(0);
+            } else if (repeat === 'SHUFFLE') {
+              const currentQueue = await TrackPlayer.getQueue();
+              const randomId = randomIdGenerator(currentQueue, id);
+              await TrackPlayer.skip(randomId + '');
+            }
+          }
         }
       }
     }, 500);
@@ -82,11 +92,6 @@ const MusicStatusBar = ({repeat, playlistName, retrieveQueue}) => {
     }
 
     return `${minutes}:${second}`;
-  };
-
-  const togglePlay = () => {
-    if (state === 3) TrackPlayer.pause();
-    else TrackPlayer.play();
   };
 
   const playState = () => {
@@ -124,7 +129,7 @@ const MusicStatusBar = ({repeat, playlistName, retrieveQueue}) => {
 const mapStateToProps = state => {
   return {
     repeat: state.player.repeat,
-    playlistName: state.queue.playlistName,
+    queue: state.queue,
   };
 };
 

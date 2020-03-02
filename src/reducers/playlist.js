@@ -10,6 +10,7 @@ const playlist = (state = initialState, action) => {
 
   switch (type) {
     case GET_PLAYLISTS:
+      console.log('get playlist dispatch');
       return {
         ...state,
         playlists: payload,

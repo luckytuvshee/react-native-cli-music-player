@@ -1,11 +1,10 @@
-import TrackPlayer, {getCurrentTrack} from 'react-native-track-player';
+import TrackPlayer from 'react-native-track-player';
 import {PermissionsAndroid} from 'react-native';
 import store from './store';
 import {SET_CURRENT_SONG_ID} from './actions/types';
 
 export const addSongToQueue = async (songs, RNFS, playSong) => {
   try {
-    TrackPlayer.reset();
     songs = songs.map((song, index) => {
       const songWithName = song.split('/').pop();
       //const songName = songWithName.split(/\.mp3/)[0];
@@ -31,10 +30,14 @@ export const addSongToQueue = async (songs, RNFS, playSong) => {
 };
 
 export const seekForward = async seconds => {
+  if (playlistSelected() === false) return;
+  const status = await TrackPlayer.getState();
+  if (status === 1) return;
+
   const position = await TrackPlayer.getPosition();
   const duration = await TrackPlayer.getDuration();
   console.log(duration - position);
-  if (Math.ceil(duration - position) <= 5) {
+  if (Math.ceil(duration - position) <= 10) {
     TrackPlayer.seekTo(duration);
   } else {
     TrackPlayer.seekTo(position + seconds);
@@ -42,12 +45,27 @@ export const seekForward = async seconds => {
 };
 
 export const seekBackward = async seconds => {
+  if (playlistSelected() === false) return;
+  const status = await TrackPlayer.getState();
+  if (status === 1) return;
+
   const position = await TrackPlayer.getPosition();
-  if (position < 5) await TrackPlayer.skipToPrevious();
-  else TrackPlayer.seekTo(position + seconds);
+  if (position < 5) {
+    const currentSongId = store.getState().player.currentSongId;
+    if (currentSongId === 0) {
+      const currentQueue = await TrackPlayer.getQueue();
+      await TrackPlayer.skip(currentQueue.length - 1 + '');
+    } else await TrackPlayer.skipToPrevious();
+
+    TrackPlayer.play();
+  } else TrackPlayer.seekTo(position + seconds);
 };
 
 export const prev = async () => {
+  if (playlistSelected() === false) return;
+  const status = await TrackPlayer.getState();
+  if (status === 1) return;
+
   const position = await TrackPlayer.getPosition();
   if (position < 5) {
     const currentId = await TrackPlayer.getCurrentTrack();
@@ -66,6 +84,10 @@ export const prev = async () => {
 };
 
 export const next = async () => {
+  if (playlistSelected() === false) return;
+  const status = await TrackPlayer.getState();
+  if (status === 1) return;
+
   const repeat = store.getState().player.repeat;
   const currentQueue = await TrackPlayer.getQueue();
   const currentId = await TrackPlayer.getCurrentTrack();
@@ -87,10 +109,16 @@ export const next = async () => {
 };
 
 export const togglePlay = async () => {
+  if (playlistSelected() === false) return;
   const status = await TrackPlayer.getState();
-  console.log(status);
+
+  if (status === 1) return;
   if (status === 3) TrackPlayer.pause();
   else TrackPlayer.play();
+};
+
+export const playlistSelected = () => {
+  return store.getState().queue.playlistName !== '';
 };
 
 export const requestReadExternalStoragePermission = async () => {
@@ -106,9 +134,9 @@ export const requestReadExternalStoragePermission = async () => {
       },
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('You can read');
+      console.log('Storage read Permission granted');
     } else {
-      console.log('Storage read permission denied');
+      console.log('Storage read Permission denied');
     }
   } catch (err) {
     console.warn(err);
@@ -124,7 +152,8 @@ export const randomIdGenerator = (currentQueue, currentId) => {
 
 export const queueEndHandler = async () => {
   const repeat = store.getState().player.repeat;
-  if (repeat === 'ALL') {
+  const id = await TrackPlayer.getCurrentTrack();
+  if (repeat === 'ALL' && id) {
     await TrackPlayer.skip('0');
   }
 };
@@ -132,6 +161,8 @@ export const queueEndHandler = async () => {
 export const trackChangeHandler = async () => {
   console.log('track changed');
   const id = await TrackPlayer.getCurrentTrack();
-  console.log('id: ' + id);
-  store.dispatch({type: SET_CURRENT_SONG_ID, payload: parseInt(id)});
+  if (id) {
+    console.log('id: ' + id);
+    store.dispatch({type: SET_CURRENT_SONG_ID, payload: parseInt(id)});
+  }
 };
