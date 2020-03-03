@@ -6,6 +6,7 @@ import {
   seekBackward,
   trackChangeHandler,
   queueEndHandler,
+  stopHandler,
 } from './utils';
 
 module.exports = async function() {
@@ -20,6 +21,8 @@ module.exports = async function() {
     trackChangeHandler(),
   );
   TrackPlayer.addEventListener('playback-queue-ended', () => queueEndHandler());
+
+  TrackPlayer.addEventListener('remote-stop', () => stopHandler());
 
   // "malformed calls from js field sizes are different" error occured
   //                        when not passing argument to seek funcions

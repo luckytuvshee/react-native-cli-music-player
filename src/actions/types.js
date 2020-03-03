@@ -5,3 +5,4 @@ export const GET_PLAYLISTS = 'GET_PLAYLISTS';
 export const CHANGE_QUEUE = 'CHANGE_QUEUE';
 export const SET_CURRENT_SONG_ID = 'SET_CURRENT_SONG_ID';
 export const CHANGE_REPEAT = 'CHANGE_REPEAT';
+export const STOP = 'STOP';

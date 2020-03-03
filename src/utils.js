@@ -1,7 +1,7 @@
 import TrackPlayer from 'react-native-track-player';
-import {PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid, AppState} from 'react-native';
 import store from './store';
-import {SET_CURRENT_SONG_ID} from './actions/types';
+import {SET_CURRENT_SONG_ID, STOP} from './actions/types';
 
 export const addSongToQueue = async (songs, RNFS, playSong) => {
   try {
@@ -165,4 +165,10 @@ export const trackChangeHandler = async () => {
     console.log('id: ' + id);
     store.dispatch({type: SET_CURRENT_SONG_ID, payload: parseInt(id)});
   }
+};
+
+export const stopHandler = async () => {
+  console.log('current state: ' + AppState.currentState);
+  TrackPlayer.destroy();
+  store.dispatch({type: STOP});
 };

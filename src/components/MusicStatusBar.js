@@ -7,7 +7,7 @@ import {retrieveQueue} from '../actions/queue';
 import {randomIdGenerator, togglePlay} from '../utils';
 
 const MusicStatusBar = ({
-  repeat,
+  player: {repeat, stopped},
   queue: {playlistName, currentQueue},
   retrieveQueue,
 }) => {
@@ -17,10 +17,23 @@ const MusicStatusBar = ({
   const [state, setState] = useState(0);
 
   useEffect(() => {
+    console.log('music re-rendered');
+
+    let isCancelled = false;
+
+    // using this local variable will clean-up useEffect.
+
     init();
-    if (!playlistName) {
-      retrieveQueue();
+    if (!isCancelled) {
+      if (!playlistName && !stopped) {
+        retrieveQueue();
+      }
     }
+
+    return () => {
+      console.log('kkk');
+      isCancelled = true;
+    };
   }, [playlistName]);
 
   const setTrackPlayerOptions = async () => {
@@ -38,6 +51,14 @@ const MusicStatusBar = ({
 
   const init = async () => {
     setTrackPlayerOptions();
+
+    if (!playlistName) {
+      setCurrentSong({});
+      setDuration(0);
+      setPosition(0);
+      setState(0);
+    }
+
     setInterval(async () => {
       if (playlistName) {
         const [pos, dur, id, state] = await Promise.all([
@@ -128,7 +149,7 @@ const MusicStatusBar = ({
 
 const mapStateToProps = state => {
   return {
-    repeat: state.player.repeat,
+    player: state.player,
     queue: state.queue,
   };
 };

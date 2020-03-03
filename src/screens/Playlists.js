@@ -37,7 +37,7 @@ const Playlists = ({
   useEffect(() => {
     getPlaylists();
     console.log('componentDidMount');
-  }, [getPlaylists]);
+  }, [playlistName]);
 
   return (
     <ScrollView style={globalStyles.container}>
