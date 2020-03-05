@@ -37,8 +37,8 @@ const Queue = ({
     //const songName = songWithName.split(/\.mp3/)[0];
     const songName = songWithName.split('.mp3')[0].split('-');
     const artist = songName.slice(0, -1).join('-');
-    const title = songName.slice(-1);
-    return `${artist} - ${title}`;
+    const title = songName.slice(-1).join('');
+    return `${artist.trim()} - ${title.trim()}`;
   };
 
   return loading || !playlistName ? (

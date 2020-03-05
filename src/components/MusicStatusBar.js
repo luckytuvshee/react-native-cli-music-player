@@ -15,6 +15,7 @@ const MusicStatusBar = ({
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
   const [state, setState] = useState(0);
+  const [volume, setVolume] = useState(0);
 
   useEffect(() => {
     console.log('music re-rendered');
@@ -57,15 +58,17 @@ const MusicStatusBar = ({
       setDuration(0);
       setPosition(0);
       setState(0);
+      setVolume(0);
     }
 
     setInterval(async () => {
       if (playlistName) {
-        const [pos, dur, id, state] = await Promise.all([
+        const [pos, dur, id, state, vol] = await Promise.all([
           TrackPlayer.getPosition(),
           TrackPlayer.getDuration(),
           TrackPlayer.getCurrentTrack(),
           TrackPlayer.getState(),
+          TrackPlayer.getVolume(),
         ]);
 
         const songName = await TrackPlayer.getTrack(id);
@@ -75,6 +78,7 @@ const MusicStatusBar = ({
           setPosition(pos);
           setDuration(dur);
           setState(state);
+          setVolume(vol);
 
           if (pos && dur && dur - pos <= 0.8) {
             if (repeat === 'ONCE') {
@@ -133,14 +137,16 @@ const MusicStatusBar = ({
           <Text
             style={
               styles.songName
-            }>{`${currentSong.artist} - ${currentSong.title}`}</Text>
+            }>{`${currentSong.artist} - ${currentSong.title} `}</Text>
         </View>
         <View style={styles.songInfo}>
           <Text style={styles.statusText}>{`${playState()} ${format(
             position,
-          )} / ${format(duration)} `}</Text>
+          )} / ${format(duration)}`}</Text>
 
-          <Text style={styles.statusText}>{playlistName}</Text>
+          <Text style={[styles.statusText, styles.playlistName]}>
+            {playlistName}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -187,5 +193,11 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 18,
     fontFamily: 'iosevka-regular',
+  },
+
+  playlistName: {
+    flex: 1,
+    flexWrap: 'wrap',
+    textAlign: 'right',
   },
 });

@@ -10,12 +10,12 @@ export const addSongToQueue = async (songs, RNFS, playSong) => {
       //const songName = songWithName.split(/\.mp3/)[0];
       const songName = songWithName.split('.mp3')[0].split('-');
       const artist = songName.slice(0, -1).join('-');
-      const title = songName.slice(-1);
+      const title = songName.slice(-1).join('');
 
       return {
-        title: `${title}`,
+        title: `${title.trim()}`,
         url: `${RNFS.ExternalStorageDirectoryPath}${song}`,
-        artist: `${artist}`,
+        artist: `${artist.trim()}`,
         id: index + '',
       };
     });

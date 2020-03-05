@@ -1,21 +1,72 @@
-import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, Image, NativeModules} from 'react-native';
 import {globalStyles} from '../styles/global';
 
 import RepeatOptions from '../components/RepeatOptions';
 import PlaybackButtons from '../components/PlaybackButtons';
+import Volume from '../components/Volume';
+
+const NativeVolume = NativeModules.NativeVolume;
 
 const NowPlaying = () => {
+  const [volume, setVolume] = useState(0);
+
+  useEffect(() => {
+    getVolume();
+  }, []);
+
+  const volumeUp = async () => {
+    NativeVolume.volumeUp(
+      err => {
+        console.log(err);
+      },
+      msg => {
+        console.log('Msg: ' + msg);
+        setVolume(msg);
+      },
+    );
+  };
+
+  const volumeDown = async () => {
+    NativeVolume.volumeDown(
+      err => {
+        console.log(err);
+      },
+      msg => {
+        console.log('Msg: ' + msg);
+        setVolume(msg);
+      },
+    );
+  };
+
+  const getVolume = async () => {
+    NativeVolume.getVolume(
+      err => {
+        console.log(err);
+      },
+      msg => {
+        console.log('Msg: ' + msg);
+        setVolume(msg);
+      },
+    );
+  };
+
   return (
     <View style={globalStyles.container}>
       <View style={styles.nowPlaying}>
         <RepeatOptions styles={styles} />
-        <View style={styles.imageContainer}>
+        <Volume
+          styles={styles}
+          volume={volume}
+          volumeUp={volumeUp}
+          volumeDown={volumeDown}
+        />
+        {/* <View style={styles.imageContainer}>
           <Image
             source={require('../../assets/images/tux.png')}
             style={styles.image}
           />
-        </View>
+        </View> */}
         <PlaybackButtons styles={styles} />
       </View>
     </View>
@@ -37,6 +88,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  volumeContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+
+  volume: {
+    borderWidth: 1,
+  },
+
+  volumeText: {
+    fontSize: 28,
+    textAlign: 'center',
+  },
+
+  hide: {
+    borderWidth: 0,
+  },
+
   image: {
     width: 150,
     height: 150,
@@ -46,7 +117,6 @@ const styles = StyleSheet.create({
   options: {
     marginTop: 'auto',
     alignItems: 'center',
-    // borderWidth: 1,
   },
 
   button: {
