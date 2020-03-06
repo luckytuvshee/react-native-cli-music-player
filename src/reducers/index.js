@@ -15,7 +15,6 @@ const rootReducer = (state, action) => {
   if (action.type === 'STOP') {
     state.playlists = undefined;
     state.queue = undefined;
-    state.player.stopped = true;
   }
 
   return appReducer(state, action);

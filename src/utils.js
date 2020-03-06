@@ -172,3 +172,10 @@ export const stopHandler = async () => {
   TrackPlayer.destroy();
   store.dispatch({type: STOP});
 };
+
+export const remoteDuckHandler = async (paused, permanent) => {
+  console.log('paused: ' + paused);
+  console.log('permanent: ' + permanent);
+  if (paused || permanent) TrackPlayer.pause();
+  else if (!paused) TrackPlayer.play();
+};

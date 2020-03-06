@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, TouchableOpacity, Alert} from 'react-native';
+import {Text, TouchableOpacity, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {getPlaylists} from '../actions/playlist';
 import {changeQueue} from '../actions/queue';

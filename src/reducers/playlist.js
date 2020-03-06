@@ -1,4 +1,4 @@
-import {GET_PLAYLISTS} from '../actions/types';
+import {GET_PLAYLISTS, CHANGE_DEFAULT_INDEX} from '../actions/types';
 
 const initialState = {
   playlists: [],

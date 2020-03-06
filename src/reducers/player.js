@@ -3,7 +3,6 @@ import {SET_CURRENT_SONG_ID, CHANGE_REPEAT} from '../actions/types';
 const initialState = {
   currentSongId: 0,
   repeat: 'ALL',
-  stopped: false,
 };
 
 const player = (state = initialState, action) => {

@@ -7,9 +7,15 @@ export const getPlaylists = () => async dispatch => {
       `${RNFS.ExternalStorageDirectoryPath}/cmus/playlists`,
     );
 
+    const playlists = res.map(playlist => {
+      return {path: playlist.path, name: playlist.name};
+    });
+
+    const sortedPlaylist = playlists.sort((a, b) => (a.name > b.name ? 1 : -1));
+
     dispatch({
       type: GET_PLAYLISTS,
-      payload: res,
+      payload: sortedPlaylist,
     });
   } catch (err) {
     console.error(err.message);

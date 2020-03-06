@@ -7,6 +7,7 @@ import {
   trackChangeHandler,
   queueEndHandler,
   stopHandler,
+  remoteDuckHandler,
 } from './utils';
 
 module.exports = async function() {
@@ -23,6 +24,10 @@ module.exports = async function() {
   TrackPlayer.addEventListener('playback-queue-ended', () => queueEndHandler());
 
   TrackPlayer.addEventListener('remote-stop', () => stopHandler());
+
+  TrackPlayer.addEventListener('remote-duck', ({paused, permanent}) =>
+    remoteDuckHandler(paused, permanent),
+  );
 
   // "malformed calls from js field sizes are different" error occured
   //                        when not passing argument to seek funcions

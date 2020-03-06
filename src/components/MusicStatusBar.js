@@ -1,44 +1,28 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, AppState} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
-import {retrieveQueue} from '../actions/queue';
 import {randomIdGenerator, togglePlay} from '../utils';
 
 const MusicStatusBar = ({
-  player: {repeat, stopped},
+  player: {repeat},
   queue: {playlistName, currentQueue},
-  retrieveQueue,
 }) => {
   const [currentSong, setCurrentSong] = useState({});
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
   const [state, setState] = useState(0);
-  const [volume, setVolume] = useState(0);
 
   useEffect(() => {
     console.log('music re-rendered');
-
-    let isCancelled = false;
-
-    // using this local variable will clean-up useEffect.
-
     init();
-    if (!isCancelled) {
-      if (!playlistName && !stopped) {
-        retrieveQueue();
-      }
-    }
-
-    return () => {
-      console.log('kkk');
-      isCancelled = true;
-    };
   }, [playlistName]);
 
   const setTrackPlayerOptions = async () => {
     await TrackPlayer.updateOptions({
+      alwaysPauseOnInterruption: true,
+
       capabilities: [
         TrackPlayer.CAPABILITY_PLAY,
         TrackPlayer.CAPABILITY_PAUSE,
@@ -58,17 +42,15 @@ const MusicStatusBar = ({
       setDuration(0);
       setPosition(0);
       setState(0);
-      setVolume(0);
     }
 
     setInterval(async () => {
       if (playlistName) {
-        const [pos, dur, id, state, vol] = await Promise.all([
+        const [pos, dur, id, state] = await Promise.all([
           TrackPlayer.getPosition(),
           TrackPlayer.getDuration(),
           TrackPlayer.getCurrentTrack(),
           TrackPlayer.getState(),
-          TrackPlayer.getVolume(),
         ]);
 
         const songName = await TrackPlayer.getTrack(id);
@@ -78,7 +60,6 @@ const MusicStatusBar = ({
           setPosition(pos);
           setDuration(dur);
           setState(state);
-          setVolume(vol);
 
           if (pos && dur && dur - pos <= 0.8) {
             if (repeat === 'ONCE') {
@@ -160,7 +141,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {retrieveQueue})(MusicStatusBar);
+export default connect(mapStateToProps)(MusicStatusBar);
 
 const styles = StyleSheet.create({
   container: {
