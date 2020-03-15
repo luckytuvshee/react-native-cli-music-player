@@ -1,14 +1,14 @@
 # nix-player
 
 ```
-Mobile version (at leeast tried to keep it simple xD) of CMUS
+Mobile version (at least tried to keep it simple xD) of CMUS
 built with React Native (React Native CLI)
 ````
 
 ## To run
 * `cd to project directory`
 * `npm install`
-* `react-native start && react-native run-android`
+* `react-native start && react-native run-android` or maybe just 'react-native run-android'
 
 ## Demo GIF
 
